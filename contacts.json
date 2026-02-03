@@ -1,0 +1,14 @@
+{
+  "whitelist": [
+    {
+      "name": "Example Contact",
+      "phone": "+14155551234",
+      "role": "friend",
+      "notes": "Example entry - replace with your contacts"
+    }
+  ],
+  "settings": {
+    "requireWhitelist": true,
+    "allowUnknownWithConfirmation": false
+  }
+}
