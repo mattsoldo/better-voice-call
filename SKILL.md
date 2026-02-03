@@ -1,5 +1,5 @@
 ---
-name: vapi-voice
+name: better-voice-call
 description: "Make interactive voice calls via Vapi. Use for urgent matters, complex decisions, or when the user explicitly requests a call."
 metadata:
   {
