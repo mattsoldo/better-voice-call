@@ -38,7 +38,10 @@ Guidelines:
 
 You have access to tools for: checking calendar, sending messages, reading emails, and other actions available through OpenClaw.'
 
-# Create assistant
+# Voicemail message - spoken when voicemail is detected
+VOICEMAIL_MESSAGE='Hi, this is Helix calling on behalf of Matt. Please give him a call back when you get a chance. Thanks!'
+
+# Create assistant with voicemail detection
 response=$(curl -s -X POST "https://api.vapi.ai/assistant" \
   -H "Authorization: Bearer $VAPI_API_KEY" \
   -H "Content-Type: application/json" \
@@ -66,7 +69,17 @@ response=$(curl -s -X POST "https://api.vapi.ai/assistant" \
     \"maxDurationSeconds\": 600,
     \"backgroundSound\": \"off\",
     \"recordingEnabled\": true,
-    \"endCallPhrases\": [\"goodbye\", \"bye\", \"that's all\", \"we're done\", \"end call\"]
+    \"endCallPhrases\": [\"goodbye\", \"bye\", \"that's all\", \"we're done\", \"end call\"],
+    \"voicemailDetection\": {
+      \"provider\": \"vapi\",
+      \"voicemailDetectionTypes\": [\"machine_end_beep\", \"machine_end_silence\", \"machine_end_other\"],
+      \"enabled\": true,
+      \"machineDetectionTimeout\": 30,
+      \"machineDetectionSpeechThreshold\": 3500,
+      \"machineDetectionSpeechEndThreshold\": 1200,
+      \"machineDetectionSilenceTimeout\": 5000
+    },
+    \"voicemailMessage\": $(echo "$VOICEMAIL_MESSAGE" | jq -Rs .)
   }")
 
 assistant_id=$(echo "$response" | jq -r '.id // empty')
@@ -78,6 +91,11 @@ if [ -n "$assistant_id" ]; then
   echo "Add this to your OpenClaw config or environment:"
   echo ""
   echo "  VAPI_ASSISTANT_ID=$assistant_id"
+  echo ""
+  echo "Features enabled:"
+  echo "  ✓ Voicemail detection (Vapi provider)"
+  echo "  ✓ Automatic voicemail message"
+  echo "  ✓ Recording enabled"
   echo ""
   echo "Next steps:"
   echo "1. Get a phone number from Vapi dashboard: https://dashboard.vapi.ai/phone-numbers"
